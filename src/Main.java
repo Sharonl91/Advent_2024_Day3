@@ -9,19 +9,19 @@ import java.util.regex.Pattern;
 public class Main {
     public static void main(String[] args) {
         String fileData = getFileData("src/Day1Input.txt");
-        getAnswer(fileData);
-
-    }
-
-    public static ArrayList<Integer> getAnswer(String fileData) {
         ArrayList<Integer> answer = new ArrayList<>();
-        Pattern p = Pattern.compile("[0-9]+");
+        Pattern p = Pattern.compile("mul\\((\\d{1,3}),(\\d{1,3})\\)");
         Matcher m = p.matcher(fileData);
-        while (m.find()) {
-            int n = Integer.parseInt(m.group());
-            answer.add(n);
+        while (m.find()){
+            int x = Integer.parseInt(m.group(1));
+            int y = Integer.parseInt(m.group(2));
+            answer.add(x*y);
         }
-        return answer;
+        int total = 0;
+        for (int i : answer){
+            total+=i;
+        }
+        System.out.println(total);
     }
     public static String getFileData(String fileName) {
         String fileData = "";
