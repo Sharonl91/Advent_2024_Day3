@@ -1,37 +1,55 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) {
-        String fileData = getFileData("src/Day1Input.txt");
-        ArrayList<Integer> answer = new ArrayList<>();
-        Pattern p = Pattern.compile("mul\\((\\d{1,3}),(\\d{1,3})\\)");
-        Matcher m = p.matcher(fileData);
-        while (m.find()){
-            int x = Integer.parseInt(m.group(1));
-            int y = Integer.parseInt(m.group(2));
-            answer.add(x*y);
-        }
+        ArrayList<String> fileData = getFileData("src/Day3Input.txt");
+        ArrayList<String> answer = new ArrayList<>();
         int total = 0;
-        for (int i : answer){
-            total+=i;
+        Pattern p = Pattern.compile("mul\\((\\d{1,3}),(\\d{1,3})\\)");
+        Pattern able = Pattern.compile("do\\(\\)");
+        Pattern disable = Pattern.compile("don't\\(\\)");
+        for(String sentence : fileData) {
+            Matcher wrong = disable.matcher(sentence);
+            Matcher correct = able.matcher(sentence);
+            Matcher m = p.matcher(sentence);
+            for (int start = 0; start < sentence.length();start++){
+                sentence = sentence.substring(start);
+                if (wrong.find()){
+                    answer.add(wrong.group());
+                }
+                if (correct.find()){
+                    answer.add(correct.group());
+                }
+                if (m.find()) {
+                    answer.add(m.group());
+                }
+            }
         }
-        System.out.println(total);
+        for (String i : answer){
+            System.out.println(i);
+//            i=i.substring(4);
+//            int len = i.length();
+//            i=i.substring(0,len-1);
+//            String[] xy = i.split(",");
+//            int x = Integer.parseInt(xy[0]);
+//            int y = Integer.parseInt(xy[1]);
+//            total+=x*y;
+        }
     }
-    public static String getFileData(String fileName) {
-        String fileData = "";
+    public static ArrayList<String> getFileData(String fileName) {
+        ArrayList<String> fileData = new ArrayList<String>();
         try {
             File f = new File(fileName);
             Scanner s = new Scanner(f);
             while (s.hasNextLine()) {
                 String line = s.nextLine();
-                if (!line.isEmpty())
-                    fileData.concat(line);
+                if (!line.equals(""))
+                    fileData.add(line);
             }
             return fileData;
         }
