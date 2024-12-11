@@ -10,36 +10,43 @@ public class Main {
         ArrayList<String> fileData = getFileData("src/Day3Input.txt");
         ArrayList<String> answer = new ArrayList<>();
         int total = 0;
-        Pattern p = Pattern.compile("mul\\((\\d{1,3}),(\\d{1,3})\\)");
-        Pattern able = Pattern.compile("do\\(\\)");
-        Pattern disable = Pattern.compile("don't\\(\\)");
+        Pattern p = Pattern.compile("mul\\((\\d{1,3}),(\\d{1,3})\\)|do\\(\\)|don't\\(\\)");
         for(String sentence : fileData) {
-            Matcher wrong = disable.matcher(sentence);
-            Matcher correct = able.matcher(sentence);
             Matcher m = p.matcher(sentence);
             for (int start = 0; start < sentence.length();start++){
                 sentence = sentence.substring(start);
-                if (wrong.find()){
-                    answer.add(wrong.group());
-                }
-                if (correct.find()){
-                    answer.add(correct.group());
-                }
                 if (m.find()) {
                     answer.add(m.group());
                 }
             }
         }
+        boolean skip = false;
         for (String i : answer){
+            if((i.charAt(0) == 'm') && skip == false){
+                i=i.substring(4);
+                int len = i.length();
+                i=i.substring(0,len-1);
+                String[] xy = i.split(",");
+                int x = Integer.parseInt(xy[0]);
+                int y = Integer.parseInt(xy[1]);
+                total+=x*y;
+            }
+            else if((i.charAt(0) == 'd')){
+                if (!(i.contains("n"))) {
+                    skip = false;
+                }
+                if(i == "don\'t\\(\\)"){
+                    skip=true;
+                }
+            }
+            else {
+                skip=true;
+            }
             System.out.println(i);
-//            i=i.substring(4);
-//            int len = i.length();
-//            i=i.substring(0,len-1);
-//            String[] xy = i.split(",");
-//            int x = Integer.parseInt(xy[0]);
-//            int y = Integer.parseInt(xy[1]);
-//            total+=x*y;
+            System.out.println(skip);
+            System.out.println(total);
         }
+        System.out.println(total);
     }
     public static ArrayList<String> getFileData(String fileName) {
         ArrayList<String> fileData = new ArrayList<String>();
